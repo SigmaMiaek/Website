@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl" class="pl">
+<html lang="pl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,14 +11,15 @@
   --bg: #0D0010;
   --bg2: #140020;
   --yellow: #FFE500;
-  --purple: #C800FF;
-  --dark-purple: #6200CC;
-  --white: #F5F0FF;
-  --red: #FF2D55;
+  --magenta: #C800FF;
+  --purple: #6200CC;
+  --white: #F0E6FF;
+  --black: #000;
+  --shadow-yellow: 5px 5px 0 var(--yellow);
+  --shadow-magenta: 5px 5px 0 var(--magenta);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { scroll-behavior: smooth; }
 
 body {
@@ -28,1234 +29,612 @@ body {
   overflow-x: hidden;
 }
 
-body.en [data-lang="pl"] { display: none !important; }
-body.pl [data-lang="en"] { display: none !important; }
-.lang-inline { display: inline; }
+.halftone { position: absolute; pointer-events: none; opacity: 0.18; }
 
-/* ===== HALFTONE SVG PATTERN ===== */
-.halftone {
-  position: absolute;
-  pointer-events: none;
-  opacity: 0.18;
-}
-
-/* ===== NAV ===== */
+/* ── NAV ── */
 nav {
   position: fixed;
   top: 0; left: 0; right: 0;
-  z-index: 100;
+  z-index: 999;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 2rem;
-  height: 64px;
-  background: rgba(13,0,16,0.92);
+  justify-content: flex-start;
+  padding: 12px 32px;
+  background: var(--bg);
   border-bottom: 3px solid var(--yellow);
-  backdrop-filter: blur(8px);
 }
-
 .nav-logo {
   font-family: 'Bangers', cursive;
   font-size: 2rem;
   color: var(--yellow);
-  letter-spacing: 2px;
+  text-decoration: none;
+  letter-spacing: 3px;
   text-shadow: 3px 3px 0 var(--purple);
 }
 
-.nav-logo span { color: var(--purple); }
-
-.lang-switcher {
-  display: flex;
-  gap: 0;
-  border: 2.5px solid var(--yellow);
-  border-radius: 4px;
-  overflow: hidden;
-  box-shadow: 3px 3px 0 var(--dark-purple);
-}
-
-.lang-btn {
-  background: transparent;
-  border: none;
-  color: var(--yellow);
-  font-family: 'Oswald', sans-serif;
-  font-size: 0.9rem;
-  padding: 6px 14px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.lang-btn.active, .lang-btn:hover {
-  background: var(--yellow);
-  color: var(--bg);
-}
-
-/* ===== TICKER ===== */
-.ticker-wrap {
-  position: fixed;
-  top: 64px; left: 0; right: 0;
-  z-index: 99;
-  background: var(--yellow);
-  border-bottom: 3px solid #000;
-  overflow: hidden;
-  height: 36px;
-  display: flex;
-  align-items: center;
-}
-
-.ticker-label {
-  flex-shrink: 0;
-  background: var(--red);
-  color: #fff;
-  font-family: 'Bangers', cursive;
-  font-size: 1.1rem;
-  letter-spacing: 1px;
-  padding: 0 16px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  border-right: 3px solid #000;
-  z-index: 2;
-}
-
-.ticker-track {
-  display: flex;
-  white-space: nowrap;
-  animation: ticker 28s linear infinite;
-}
-
-.ticker-track:hover { animation-play-state: paused; }
-
-.ticker-item {
-  font-family: 'Oswald', sans-serif;
-  font-size: 0.85rem;
-  color: #000;
-  padding: 0 32px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.ticker-item::before {
-  content: '⚡';
-  font-size: 0.8rem;
-}
-
-@keyframes ticker {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* ===== HERO ===== */
-.hero {
+/* ── HERO ── */
+#hero {
+  position: relative;
   min-height: 100vh;
-  padding-top: 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  text-align: center;
-  position: relative;
+  justify-content: center;
+  padding-top: 100px;
   overflow: hidden;
-  background:
-    repeating-linear-gradient(
-      -45deg,
-      rgba(98,0,204,0.07) 0px,
-      rgba(98,0,204,0.07) 2px,
-      transparent 2px,
-      transparent 24px
-    ),
-    var(--bg);
+  text-align: center;
 }
 
-.hero-bg-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: 'Bangers', cursive;
-  font-size: clamp(80px, 22vw, 260px);
-  color: transparent;
-  -webkit-text-stroke: 2px rgba(200,0,255,0.08);
-  letter-spacing: 8px;
-  pointer-events: none;
-  white-space: nowrap;
-  user-select: none;
+.oblique-bg {
+  position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(-60deg, transparent 0, transparent 60px,
+    rgba(98,0,204,0.04) 60px, rgba(98,0,204,0.04) 61px);
 }
+
+.hero-graffiti-bg {
+  position: absolute; inset: 0;
+  font-family: 'Permanent Marker', cursive;
+  font-size: clamp(80px, 18vw, 220px);
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(200,0,255,0.08);
+  display: flex; align-items: center; justify-content: center;
+  user-select: none; pointer-events: none; letter-spacing: -10px;
+}
+
+.hero-speed-lines { position: absolute; inset: 0; pointer-events: none; opacity: 0.07; }
 
 .sticker {
-  background: var(--yellow);
-  color: #000;
-  font-family: 'Permanent Marker', cursive;
-  font-size: 1rem;
-  padding: 8px 20px;
-  border: 3px solid #000;
-  border-radius: 4px;
   display: inline-block;
-  transform: rotate(-3deg);
-  box-shadow: 4px 4px 0 #000;
-  margin-bottom: 24px;
-  position: relative;
-  z-index: 2;
+  background: var(--yellow); color: var(--black);
+  font-family: 'Permanent Marker', cursive;
+  font-size: 1rem; padding: 6px 16px;
+  border: 3px solid var(--black);
+  box-shadow: 4px 4px 0 var(--black);
+  transform: rotate(-3deg); margin-bottom: 18px; letter-spacing: 1px;
 }
 
-.hero h1 {
+.hero-title {
   font-family: 'Bangers', cursive;
-  font-size: clamp(3.5rem, 12vw, 8rem);
-  line-height: 0.9;
-  color: var(--yellow);
-  text-shadow: 5px 5px 0 var(--purple), 8px 8px 0 #000;
-  letter-spacing: 4px;
-  margin-bottom: 16px;
-  position: relative;
-  z-index: 2;
+  font-size: clamp(3.5rem, 12vw, 9rem);
+  color: var(--yellow); letter-spacing: 6px; line-height: 0.9;
+  text-shadow: 8px 8px 0 var(--purple);
 }
-
-.hero h1 span { color: var(--white); text-shadow: 5px 5px 0 var(--dark-purple), 8px 8px 0 #000; }
 
 .hero-sub {
   font-family: 'Special Elite', serif;
-  font-size: 1.15rem;
-  color: var(--white);
-  opacity: 0.8;
-  max-width: 520px;
-  margin: 0 auto 40px;
-  position: relative;
-  z-index: 2;
-  line-height: 1.6;
+  font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+  color: var(--white); margin-top: 20px; max-width: 520px;
+  opacity: 0.85; line-height: 1.6;
 }
 
-/* Speed lines */
-.speedlines {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
+.hero-tag {
+  font-family: 'Permanent Marker', cursive;
+  color: var(--magenta); font-size: 1.1rem; margin-top: 10px; opacity: 0.8;
 }
 
-/* ===== DIVIDER ===== */
-.divider {
-  height: 16px;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--yellow) 0px, var(--yellow) 32px,
-    var(--purple) 32px, var(--purple) 64px,
-    #000 64px, #000 80px
-  );
-  border-top: 3px solid #000;
-  border-bottom: 3px solid #000;
+.scroll-arrow {
+  position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+  cursor: pointer; animation: bounce 1.4s infinite; background: none; border: none;
+}
+@keyframes bounce {
+  0%,100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(10px); }
 }
 
-/* ===== SECTIONS ===== */
-section {
-  position: relative;
-  padding: 80px 2rem;
-  overflow: hidden;
+/* ── DIVIDER ── */
+.stripe-divider {
+  width: 100%; height: 16px;
+  background: repeating-linear-gradient(90deg,
+    var(--yellow) 0px, var(--yellow) 30px,
+    var(--purple) 30px, var(--purple) 60px,
+    var(--black) 60px, var(--black) 90px);
+  border-top: 3px solid var(--black);
+  border-bottom: 3px solid var(--black);
 }
 
-section:nth-child(even) { background: var(--bg2); }
+/* ── GALLERY ── */
+#gallery { position: relative; padding: 80px 32px; background: var(--bg2); }
 
 .section-title {
   font-family: 'Bangers', cursive;
-  font-size: clamp(2.5rem, 7vw, 4.5rem);
-  color: var(--yellow);
-  text-shadow: 4px 4px 0 #000;
-  letter-spacing: 3px;
-  margin-bottom: 8px;
-  text-align: center;
+  font-size: clamp(2rem, 7vw, 4.5rem); color: var(--yellow);
+  letter-spacing: 4px; text-shadow: 4px 4px 0 var(--purple);
+  margin-bottom: 12px; text-align: center;
 }
 
 .section-sub {
-  font-family: 'Special Elite', serif;
-  color: var(--purple);
-  text-align: center;
-  margin-bottom: 48px;
-  font-size: 1rem;
-  opacity: 0.85;
+  font-family: 'Special Elite', serif; text-align: center;
+  color: var(--white); opacity: 0.7; margin-bottom: 50px; font-size: 1rem;
 }
 
-/* ===== BUTTONS GRID ===== */
-.btn-grid {
+/* ── TILES ── */
+.tiles-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 24px;
-  max-width: 1000px;
-  margin: 0 auto;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 28px; max-width: 1100px; margin: 0 auto;
 }
 
-.school-btn {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 28px 20px 22px;
-  background: var(--bg);
-  border: 3px solid var(--yellow);
-  border-radius: 6px;
-  box-shadow: 6px 6px 0 var(--yellow);
-  cursor: pointer;
-  transition: transform 0.12s, box-shadow 0.12s;
-  text-decoration: none;
-  color: var(--white);
-  font-family: 'Oswald', sans-serif;
-  font-size: 1.2rem;
-  letter-spacing: 1px;
-  overflow: hidden;
+.tile {
+  position: relative; background: var(--bg);
+  border: 3px solid var(--black); box-shadow: var(--shadow-yellow);
+  cursor: pointer; transition: transform 0.12s, box-shadow 0.12s; overflow: hidden;
+}
+.tile:hover { transform: translate(-4px,-4px); box-shadow: 9px 9px 0 var(--yellow); }
+.tile.soon { opacity: .4; cursor: default; border-style: dashed; }
+.tile.soon:hover { transform: none; box-shadow: var(--shadow-yellow); }
+.tile::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(-45deg,
+    transparent 0px, transparent 10px,
+    rgba(0,0,0,0.12) 10px, rgba(0,0,0,0.12) 20px);
 }
 
-.school-btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--yellow);
-  transform: scaleY(0);
-  transform-origin: bottom;
-  transition: transform 0.18s;
-  z-index: 0;
+.tile-inner {
+  padding: 28px 20px; display: flex;
+  flex-direction: column; align-items: center; gap: 14px;
+}
+.tile-icon { font-size: 3rem; line-height: 1; }
+.tile-name {
+  font-family: 'Bangers', cursive; font-size: 1.8rem;
+  color: var(--yellow); letter-spacing: 2px; text-align: center;
+  text-shadow: 2px 2px 0 var(--purple);
+}
+.tile-label {
+  font-family: 'Oswald', sans-serif; font-size: 0.7rem; font-weight: 700;
+  background: var(--magenta); color: var(--black);
+  padding: 3px 10px; border: 2px solid var(--black);
+  letter-spacing: 2px; text-transform: uppercase;
+}
+.tile-label.open { background: var(--purple); }
+.tile-count {
+  font-family: 'Oswald', sans-serif; font-size: 0.7rem;
+  color: var(--white); opacity: 0.55; letter-spacing: 1px;
+}
+.tile-locked-icon {
+  position: absolute; top: 10px; right: 12px;
+  font-size: 1.1rem; opacity: 0.5;
 }
 
-.school-btn:hover::before { transform: scaleY(1); }
-.school-btn:hover { color: #000; transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--dark-purple); }
-.school-btn:active { transform: translate(3px, 3px); box-shadow: 3px 3px 0 var(--yellow); }
-
-.school-btn .btn-icon {
-  font-size: 2.4rem;
-  position: relative;
-  z-index: 1;
-}
-
-.school-btn .btn-label {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  line-height: 1.2;
-}
-
-.school-btn .btn-tag {
-  position: absolute;
-  top: 8px; right: 8px;
-  font-family: 'Permanent Marker', cursive;
-  font-size: 0.65rem;
-  background: var(--purple);
-  color: #fff;
-  padding: 2px 8px;
-  border-radius: 3px;
-  border: 1.5px solid #000;
-  z-index: 2;
-}
-
-.school-btn.hot { border-color: var(--red); box-shadow: 6px 6px 0 var(--red); }
-.school-btn.hot::before { background: var(--red); }
-.school-btn.hot:hover { color: #fff; box-shadow: 9px 9px 0 #8B0000; }
-
-.school-btn.purple-btn { border-color: var(--purple); box-shadow: 6px 6px 0 var(--dark-purple); }
-.school-btn.purple-btn::before { background: var(--purple); }
-.school-btn.purple-btn:hover { color: #fff; }
-
-/* ===== LOST & FOUND ===== */
-.lost-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.lost-card {
-  background: var(--bg);
-  border: 2.5px solid var(--purple);
-  border-radius: 6px;
-  padding: 20px;
-  box-shadow: 4px 4px 0 var(--dark-purple);
-  transition: transform 0.12s, box-shadow 0.12s;
-}
-
-.lost-card:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--purple); }
-
-.lost-card-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.lost-badge {
-  background: var(--red);
-  color: #fff;
-  font-family: 'Bangers', cursive;
-  font-size: 0.85rem;
-  padding: 2px 10px;
-  border-radius: 3px;
-  border: 1.5px solid #000;
-  letter-spacing: 1px;
-}
-
-.lost-badge.found { background: #00C853; }
-.lost-badge.info { background: var(--dark-purple); }
-
-.lost-card-title {
-  font-family: 'Oswald', sans-serif;
-  font-size: 1rem;
-  color: var(--yellow);
-}
-
-.lost-card p {
-  font-size: 0.85rem;
-  opacity: 0.75;
-  line-height: 1.5;
-}
-
-.lost-card-meta {
-  font-family: 'Permanent Marker', cursive;
-  font-size: 0.75rem;
-  color: var(--purple);
-  margin-top: 10px;
-}
-
-/* ===== SCHEDULE ===== */
-.schedule-wrap {
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.schedule-day {
-  margin-bottom: 20px;
-}
-
-.schedule-day-title {
-  font-family: 'Bangers', cursive;
-  font-size: 1.4rem;
-  color: var(--yellow);
-  letter-spacing: 2px;
-  border-bottom: 2px solid var(--dark-purple);
-  padding-bottom: 4px;
-  margin-bottom: 10px;
-}
-
-.schedule-row {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  padding: 8px 12px;
-  border-radius: 4px;
-  margin-bottom: 4px;
-  background: rgba(98,0,204,0.1);
-  border-left: 3px solid var(--dark-purple);
-  transition: background 0.12s;
-}
-
-.schedule-row:hover { background: rgba(200,0,255,0.12); }
-
-.schedule-time {
-  font-family: 'Oswald', sans-serif;
-  font-size: 0.85rem;
-  color: var(--purple);
-  min-width: 80px;
-}
-
-.schedule-subject {
-  font-family: 'Special Elite', serif;
-  font-size: 0.95rem;
-  flex: 1;
-}
-
-.schedule-room {
-  font-family: 'Permanent Marker', cursive;
-  font-size: 0.8rem;
-  color: var(--yellow);
-  opacity: 0.7;
-}
-
-/* ===== CHAT/FORUM ===== */
-.forum-preview {
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.forum-post {
-  display: flex;
-  gap: 14px;
-  padding: 16px;
-  background: var(--bg);
-  border: 2px solid rgba(200,0,255,0.25);
-  border-radius: 6px;
-  margin-bottom: 12px;
-  transition: border-color 0.15s, transform 0.12s;
-}
-
-.forum-post:hover { border-color: var(--purple); transform: translateX(4px); }
-
-.forum-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 2.5px solid var(--yellow);
-  background: var(--dark-purple);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Bangers', cursive;
-  font-size: 1.3rem;
-  color: var(--yellow);
-  flex-shrink: 0;
-}
-
-.forum-body { flex: 1; }
-
-.forum-name {
-  font-family: 'Oswald', sans-serif;
-  font-size: 0.9rem;
-  color: var(--yellow);
-  margin-bottom: 4px;
-}
-
-.forum-text {
-  font-size: 0.88rem;
-  opacity: 0.8;
-  line-height: 1.5;
-}
-
-.forum-meta {
-  font-family: 'Permanent Marker', cursive;
-  font-size: 0.72rem;
-  color: var(--purple);
-  margin-top: 6px;
-}
-
-/* ===== TESTS / SPRAWDZIANY ===== */
-.test-list {
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.test-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 14px 18px;
-  background: var(--bg);
-  border: 2.5px solid var(--yellow);
-  border-radius: 6px;
-  margin-bottom: 12px;
-  box-shadow: 4px 4px 0 rgba(255,229,0,0.25);
-  transition: transform 0.12s, box-shadow 0.12s;
-}
-
-.test-item:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--yellow); }
-
-.test-date-box {
-  background: var(--yellow);
-  color: #000;
-  font-family: 'Bangers', cursive;
-  font-size: 1.3rem;
-  padding: 6px 14px;
-  border: 2px solid #000;
-  border-radius: 4px;
-  min-width: 70px;
-  text-align: center;
-  line-height: 1.1;
-  flex-shrink: 0;
-}
-
-.test-date-box span {
-  display: block;
-  font-family: 'Oswald', sans-serif;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-.test-info { flex: 1; }
-
-.test-subject {
-  font-family: 'Oswald', sans-serif;
-  font-size: 1.05rem;
-  color: var(--yellow);
-  margin-bottom: 2px;
-}
-
-.test-detail {
-  font-size: 0.83rem;
-  opacity: 0.7;
-  line-height: 1.4;
-}
-
-.test-badge {
-  font-family: 'Permanent Marker', cursive;
-  font-size: 0.78rem;
-  padding: 3px 10px;
-  border-radius: 3px;
-  border: 1.5px solid #000;
-  color: #000;
-}
-
-.test-badge.red { background: var(--red); color: #fff; }
-.test-badge.green { background: #00C853; }
-.test-badge.blue { background: #00B4FF; }
-
-/* ===== LINKS/ZASOBY ===== */
-.links-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.link-tile {
-  background: var(--bg);
-  border: 2.5px solid var(--dark-purple);
-  border-radius: 6px;
-  padding: 20px 14px;
-  text-align: center;
-  text-decoration: none;
-  color: var(--white);
-  box-shadow: 4px 4px 0 var(--dark-purple);
-  transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
-}
-
-.link-tile:hover {
-  transform: translate(-3px,-3px);
-  box-shadow: 7px 7px 0 var(--purple);
-  border-color: var(--purple);
-}
-
-.link-tile .lt-icon { font-size: 2rem; }
-.link-tile .lt-name {
-  font-family: 'Oswald', sans-serif;
-  font-size: 0.95rem;
-  color: var(--yellow);
-}
-.link-tile .lt-desc {
-  font-size: 0.75rem;
-  opacity: 0.6;
-  line-height: 1.4;
-}
-
-/* ===== FOOTER ===== */
-footer {
-  background: var(--bg2);
-  border-top: 4px solid var(--yellow);
-  padding: 40px 2rem 24px;
-  text-align: center;
-}
-
-footer .footer-logo {
-  font-family: 'Bangers', cursive;
-  font-size: 2.5rem;
-  color: var(--yellow);
-  text-shadow: 3px 3px 0 var(--purple);
-  letter-spacing: 3px;
-  margin-bottom: 8px;
-}
-
-footer p {
-  font-family: 'Special Elite', serif;
-  font-size: 0.85rem;
-  opacity: 0.5;
-  line-height: 1.8;
-}
-
-/* ===== SCROLL ARROW ===== */
-.scroll-arrow {
-  position: absolute;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
-  animation: bounce 1.6s ease-in-out infinite;
-  cursor: pointer;
-  z-index: 10;
-  text-decoration: none;
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(12px); }
-}
-
-/* ===== MODAL ===== */
+/* ── MODAL ── */
 .modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.8);
-  z-index: 200;
-  align-items: center;
-  justify-content: center;
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.85); z-index: 9999;
+  align-items: center; justify-content: center; padding: 20px;
 }
-
 .modal-overlay.open { display: flex; }
 
-.modal {
-  background: var(--bg2);
-  border: 3px solid var(--yellow);
-  border-radius: 8px;
-  padding: 40px 32px;
-  max-width: 480px;
-  width: 90%;
-  box-shadow: 8px 8px 0 var(--dark-purple);
-  position: relative;
+.modal-box {
+  background: var(--bg2); border: 3px solid var(--yellow);
+  box-shadow: 8px 8px 0 var(--magenta);
+  padding: 36px 40px; max-width: 700px; width: 100%;
+  max-height: 90vh; overflow-y: auto; position: relative;
+  animation: popIn 0.2s cubic-bezier(.34,1.56,.64,1);
 }
-
-.modal-title {
-  font-family: 'Bangers', cursive;
-  font-size: 2.2rem;
-  color: var(--yellow);
-  text-shadow: 3px 3px 0 #000;
-  margin-bottom: 8px;
+@keyframes popIn {
+  from { transform: scale(0.7) rotate(-3deg); opacity: 0; }
+  to { transform: scale(1) rotate(0); opacity: 1; }
 }
-
-.modal p { font-size: 0.9rem; opacity: 0.8; margin-bottom: 20px; }
-
-.modal input, .modal textarea {
-  width: 100%;
-  background: var(--bg);
-  border: 2px solid var(--dark-purple);
-  border-radius: 4px;
-  color: var(--white);
-  font-family: 'Special Elite', serif;
-  font-size: 0.9rem;
-  padding: 10px 14px;
-  margin-bottom: 12px;
-  outline: none;
-  transition: border-color 0.15s;
-}
-
-.modal input:focus, .modal textarea:focus { border-color: var(--purple); }
-.modal textarea { height: 90px; resize: vertical; }
 
 .modal-close {
-  position: absolute;
-  top: 12px; right: 16px;
-  background: none;
-  border: none;
-  color: var(--yellow);
-  font-family: 'Bangers', cursive;
-  font-size: 1.8rem;
-  cursor: pointer;
-  line-height: 1;
+  position: absolute; top: 12px; right: 14px;
+  background: none; border: none; color: var(--white);
+  font-size: 1.4rem; cursor: pointer; opacity: 0.6; line-height: 1;
+}
+.modal-close:hover { opacity: 1; color: var(--yellow); }
+
+.modal-title {
+  font-family: 'Bangers', cursive; font-size: 2rem;
+  color: var(--yellow); letter-spacing: 3px;
+  text-shadow: 3px 3px 0 var(--purple); margin-bottom: 8px;
+}
+.modal-hint {
+  font-family: 'Special Elite', serif; font-size: 0.85rem;
+  color: var(--white); opacity: 0.7; margin-bottom: 20px;
+}
+.modal-input {
+  width: 100%; padding: 12px 16px; background: var(--bg);
+  border: 3px solid var(--yellow); color: var(--yellow);
+  font-family: 'Oswald', sans-serif; font-size: 1.1rem;
+  font-weight: 700; letter-spacing: 3px; outline: none; margin-bottom: 16px;
+}
+.modal-input::placeholder { color: rgba(255,229,0,0.3); letter-spacing: 1px; }
+.modal-btn {
+  width: 100%; padding: 12px; background: var(--yellow); color: var(--black);
+  font-family: 'Bangers', cursive; font-size: 1.4rem; letter-spacing: 3px;
+  border: 3px solid var(--black); box-shadow: 4px 4px 0 var(--black);
+  cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;
+}
+.modal-btn:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--black); }
+.modal-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--black); }
+.modal-error {
+  font-family: 'Special Elite', serif; color: #ff4444;
+  font-size: 0.85rem; margin-top: 10px; display: none;
+}
+.modal-error.show { display: block; }
+
+.content-area { display: none; }
+.content-area.visible { display: block; }
+
+/* ── PHOTOS GRID ── */
+.photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px; margin-top: 14px;
 }
 
-.modal-close:hover { color: var(--red); }
+.photo-card {
+  position: relative; border: 3px solid var(--purple);
+  box-shadow: 3px 3px 0 var(--magenta); overflow: hidden; cursor: pointer;
+}
+.photo-card img {
+  width: 100%; aspect-ratio: 4/3; object-fit: cover;
+  display: block; transition: transform 0.2s;
+}
+.photo-card:hover img { transform: scale(1.06); }
+.photo-name {
+  background: rgba(13,0,16,0.88); color: var(--white);
+  font-family: 'Special Elite', serif; font-size: 0.7rem;
+  padding: 4px 8px; position: absolute; bottom: 0; left: 0; right: 0;
+  text-align: center; opacity: 0; transition: opacity 0.2s;
+}
+.photo-card:hover .photo-name { opacity: 1; }
 
-.btn-submit {
-  background: var(--yellow);
-  color: #000;
-  border: 3px solid #000;
-  border-radius: 4px;
-  font-family: 'Bangers', cursive;
-  font-size: 1.3rem;
-  letter-spacing: 2px;
-  padding: 10px 28px;
-  cursor: pointer;
-  box-shadow: 4px 4px 0 #000;
-  transition: transform 0.1s, box-shadow 0.1s;
-  display: block;
-  width: 100%;
+.file-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border: 2px solid var(--purple);
+  color: var(--white); font-family: 'Special Elite', serif;
+  font-size: .85rem; text-decoration: none; transition: border-color .15s;
+  grid-column: 1/-1;
+}
+.file-link:hover { border-color: var(--yellow); }
+
+.empty-msg {
+  font-family: 'Special Elite', serif; opacity: 0.45;
+  font-size: 0.9rem; text-align: center;
+  padding: 30px 0; grid-column: 1/-1; line-height: 1.8;
 }
 
-.btn-submit:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 #000; }
-.btn-submit:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 #000; }
-
-/* ===== TOAST ===== */
-.toast {
-  position: fixed;
-  bottom: 32px;
-  right: 32px;
-  background: var(--yellow);
-  color: #000;
-  font-family: 'Bangers', cursive;
-  font-size: 1.2rem;
-  letter-spacing: 1px;
-  padding: 12px 24px;
-  border: 3px solid #000;
-  border-radius: 6px;
-  box-shadow: 5px 5px 0 var(--dark-purple);
-  z-index: 300;
-  transform: translateY(100px);
-  opacity: 0;
-  transition: transform 0.3s, opacity 0.3s;
+/* ── LIGHTBOX ── */
+.lightbox {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.95); z-index: 99999;
+  align-items: center; justify-content: center;
+  flex-direction: column; gap: 12px;
+}
+.lightbox.open { display: flex; }
+.lightbox img {
+  max-width: 90vw; max-height: 82vh; object-fit: contain;
+  border: 3px solid var(--yellow); box-shadow: 0 0 40px rgba(200,0,255,0.4);
+}
+.lightbox-close {
+  position: absolute; top: 18px; right: 24px;
+  background: none; border: none; color: var(--yellow);
+  font-size: 2rem; cursor: pointer;
+}
+.lightbox-caption {
+  font-family: 'Special Elite', serif; color: var(--white);
+  opacity: 0.55; font-size: 0.85rem;
 }
 
-.toast.show { transform: translateY(0); opacity: 1; }
-
-/* ===== SPOTED ===== */
-.spoted-input-wrap {
-  max-width: 600px;
-  margin: 0 auto 32px;
-  display: flex;
-  gap: 12px;
+/* ── FOOTER ── */
+footer {
+  padding: 40px 32px; background: var(--bg);
+  border-top: 3px solid var(--yellow); text-align: center;
+}
+.footer-logo {
+  font-family: 'Bangers', cursive; font-size: 2.2rem;
+  color: var(--yellow); letter-spacing: 4px;
+  text-shadow: 3px 3px 0 var(--purple);
+}
+.footer-copy {
+  font-family: 'Special Elite', serif; font-size: 0.8rem;
+  color: var(--white); opacity: 0.4; margin-top: 10px;
 }
 
-.spoted-input {
-  flex: 1;
-  background: var(--bg);
-  border: 2.5px solid var(--purple);
-  border-radius: 6px;
-  color: var(--white);
-  font-family: 'Special Elite', serif;
-  font-size: 0.95rem;
-  padding: 12px 16px;
-  outline: none;
-  transition: border-color 0.15s;
-}
-
-.spoted-input:focus { border-color: var(--yellow); }
-
-.spoted-send {
-  background: var(--purple);
-  color: #fff;
-  border: 2.5px solid #000;
-  border-radius: 6px;
-  font-family: 'Bangers', cursive;
-  font-size: 1.2rem;
-  letter-spacing: 1px;
-  padding: 10px 22px;
-  cursor: pointer;
-  box-shadow: 4px 4px 0 #000;
-  transition: transform 0.1s, box-shadow 0.1s;
-}
-
-.spoted-send:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 #000; }
-
-.spoted-wall {
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.spoted-msg {
-  padding: 14px 18px;
-  background: var(--bg2);
-  border-left: 4px solid var(--purple);
-  border-radius: 0 6px 6px 0;
-  margin-bottom: 10px;
-  font-size: 0.92rem;
-  line-height: 1.5;
-  animation: fadeSlide 0.35s ease;
-}
-
-.spoted-msg .spoted-nick {
-  font-family: 'Permanent Marker', cursive;
-  color: var(--yellow);
-  font-size: 0.8rem;
-  margin-bottom: 4px;
-}
-
-@keyframes fadeSlide {
-  from { opacity: 0; transform: translateX(-16px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-/* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {
-  .btn-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
-  .school-btn { padding: 20px 12px 16px; font-size: 1rem; }
-  .school-btn .btn-icon { font-size: 1.8rem; }
-  .links-grid { grid-template-columns: 1fr 1fr; }
-  nav { padding: 0 1rem; }
-  .nav-logo { font-size: 1.5rem; }
-  .spoted-input-wrap { flex-direction: column; }
+  nav { padding: 10px 16px; }
+  #gallery { padding: 50px 16px; }
+  .modal-box { padding: 24px 20px; }
+  .tiles-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
 }
 </style>
 </head>
-<body class="pl">
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+  ⚙️  KONFIGURACJA FOLDERÓW
+  Dodaj ścieżki do swoich plików w tablicy "pliki".
+  Przykłady:
+    'sprawdziany/matematyka_01.jpg'
+    'sprawdziany/polski_02.png'
+  Obsługiwane typy obrazów: jpg, jpeg, png, gif, webp
+  Inne pliki (np. pdf) pojawią się jako linki do pobrania.
+═══════════════════════════════════════════════════════════ -->
+<script>
+const FOLDERY = {
+
+  sprawdziany: {
+    haslo: 'miaek2026',
+    ikona: '📝',
+    nazwa: 'Sprawdziany',
+    zablokowane: true,
+    pliki: [
+      // 'sprawdziany/matematyka_01.jpg',
+      // 'sprawdziany/polski_01.jpg',
+      // 'sprawdziany/angielski_01.jpg',
+    ]
+  },
+
+  notatki: {
+    haslo: 'notatki2026',
+    ikona: '📓',
+    nazwa: 'Notatki',
+    zablokowane: true,
+    pliki: [
+      // 'notatki/chemia_01.jpg',
+      // 'notatki/fizyka_01.jpg',
+    ]
+  },
+
+  zdjecia: {
+    haslo: null,
+    ikona: '🖼️',
+    nazwa: 'Zdjęcia',
+    zablokowane: false,
+    pliki: [
+      // 'zdjecia/foto_01.jpg',
+    ]
+  },
+
+  inne: {
+    haslo: 'tajne2026',
+    ikona: '📦',
+    nazwa: 'Inne',
+    zablokowane: true,
+    pliki: [
+      // 'inne/plik_01.jpg',
+    ]
+  }
+
+};
+</script>
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">miaek<span>.pl</span></div>
-  <div class="lang-switcher">
-    <button class="lang-btn active" id="btn-pl" onclick="setLang('pl')">PL</button>
-    <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
-  </div>
+  <a href="#" class="nav-logo">miaek.pl</a>
 </nav>
 
-<!-- TICKER (wiadomości) -->
-<div class="ticker-wrap">
-  <div class="ticker-label">📢 NEWS</div>
-  <div class="ticker-track" id="ticker-track">
-    <!-- PL -->
-    <span class="ticker-item" data-lang="pl">🎒 Zgubiono plecak Nike w korytarzu przy sali 204 — kontakt: Karol kl. 3B</span>
-    <span class="ticker-item" data-lang="pl">📱 Znaleziono telefon Samsung przy szatni — odbierz u p. woźnej</span>
-    <span class="ticker-item" data-lang="pl">📝 Sprawdzian z matematyki — klasy 2A i 2B — 15.03 (piątek!)</span>
-    <span class="ticker-item" data-lang="pl">⚽ Zapisy na turniej piłki nożnej — do 14.03 u p. Kowalskiego</span>
-    <span class="ticker-item" data-lang="pl">🎨 Konkurs plastyczny „Moje miasto" — prace do 20.03</span>
-    <span class="ticker-item" data-lang="pl">🔑 Zgubiono klucze na breloku z kotem — sala 118</span>
-    <span class="ticker-item" data-lang="pl">📚 Biblioteka nieczynna 13.03 (środa) — przerwa techniczna</span>
-    <!-- EN -->
-    <span class="ticker-item" data-lang="en">🎒 Lost: Nike backpack near room 204 — contact Karol class 3B</span>
-    <span class="ticker-item" data-lang="en">📱 Found: Samsung phone near lockers — pick up at the janitor's office</span>
-    <span class="ticker-item" data-lang="en">📝 Math test — classes 2A & 2B — March 15 (Friday!)</span>
-    <span class="ticker-item" data-lang="en">⚽ Football tournament sign-ups — until Mar 14 at Mr Kowalski's</span>
-    <span class="ticker-item" data-lang="en">🎨 Art contest "My City" — submissions by March 20</span>
-    <span class="ticker-item" data-lang="en">🔑 Lost: keys with cat keychain — room 118</span>
-    <span class="ticker-item" data-lang="en">📚 Library closed Mar 13 (Wed) — maintenance break</span>
-    <!-- duplicate for seamless loop -->
-    <span class="ticker-item" data-lang="pl">🎒 Zgubiono plecak Nike w korytarzu przy sali 204 — kontakt: Karol kl. 3B</span>
-    <span class="ticker-item" data-lang="pl">📱 Znaleziono telefon Samsung przy szatni — odbierz u p. woźnej</span>
-    <span class="ticker-item" data-lang="pl">📝 Sprawdzian z matematyki — klasy 2A i 2B — 15.03 (piątek!)</span>
-    <span class="ticker-item" data-lang="pl">⚽ Zapisy na turniej piłki nożnej — do 14.03 u p. Kowalskiego</span>
-    <span class="ticker-item" data-lang="en">🎒 Lost: Nike backpack near room 204 — contact Karol class 3B</span>
-    <span class="ticker-item" data-lang="en">📱 Found: Samsung phone near lockers — pick up at the janitor's office</span>
-    <span class="ticker-item" data-lang="en">📝 Math test — classes 2A & 2B — March 15 (Friday!)</span>
-    <span class="ticker-item" data-lang="en">⚽ Football tournament sign-ups — until Mar 14 at Mr Kowalski's</span>
-  </div>
-</div>
-
 <!-- HERO -->
-<section class="hero" id="hero">
-  <!-- SVG speed lines -->
-  <svg class="speedlines" viewBox="0 0 1440 900" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <line x1="0" y1="0" x2="400" y2="450" stroke="rgba(200,0,255,0.06)" stroke-width="2"/>
-    <line x1="0" y1="0" x2="600" y2="500" stroke="rgba(255,229,0,0.05)" stroke-width="1.5"/>
-    <line x1="1440" y1="0" x2="900" y2="500" stroke="rgba(200,0,255,0.06)" stroke-width="2"/>
-    <line x1="1440" y1="0" x2="800" y2="480" stroke="rgba(255,229,0,0.04)" stroke-width="1.5"/>
-    <line x1="0" y1="900" x2="500" y2="400" stroke="rgba(98,0,204,0.07)" stroke-width="2"/>
-    <line x1="1440" y1="900" x2="900" y2="400" stroke="rgba(98,0,204,0.07)" stroke-width="2"/>
-    <circle cx="80" cy="140" r="3" fill="rgba(255,229,0,0.15)"/>
-    <circle cx="120" cy="170" r="4" fill="rgba(255,229,0,0.1)"/>
-    <circle cx="60" cy="190" r="2.5" fill="rgba(255,229,0,0.12)"/>
-    <circle cx="100" cy="210" r="3.5" fill="rgba(200,0,255,0.1)"/>
-    <circle cx="140" cy="155" r="2" fill="rgba(200,0,255,0.12)"/>
-    <circle cx="1360" cy="140" r="3" fill="rgba(255,229,0,0.15)"/>
-    <circle cx="1320" cy="170" r="4" fill="rgba(255,229,0,0.1)"/>
-    <circle cx="1380" cy="190" r="2.5" fill="rgba(255,229,0,0.12)"/>
-    <circle cx="1340" cy="210" r="3.5" fill="rgba(200,0,255,0.1)"/>
+<section id="hero">
+  <div class="oblique-bg"></div>
+  <svg class="hero-speed-lines" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+    <g stroke="#FFE500" stroke-width="1">
+      <line x1="720" y1="450" x2="0" y2="0"/><line x1="720" y1="450" x2="200" y2="0"/>
+      <line x1="720" y1="450" x2="400" y2="0"/><line x1="720" y1="450" x2="600" y2="0"/>
+      <line x1="720" y1="450" x2="900" y2="0"/><line x1="720" y1="450" x2="1100" y2="0"/>
+      <line x1="720" y1="450" x2="1300" y2="0"/><line x1="720" y1="450" x2="1440" y2="0"/>
+      <line x1="720" y1="450" x2="0" y2="200"/><line x1="720" y1="450" x2="0" y2="500"/>
+      <line x1="720" y1="450" x2="0" y2="900"/><line x1="720" y1="450" x2="1440" y2="200"/>
+      <line x1="720" y1="450" x2="1440" y2="600"/><line x1="720" y1="450" x2="1440" y2="900"/>
+      <line x1="720" y1="450" x2="300" y2="900"/><line x1="720" y1="450" x2="700" y2="900"/>
+      <line x1="720" y1="450" x2="1100" y2="900"/>
+    </g>
   </svg>
-  <div class="hero-bg-text">MIAEK</div>
-  <div class="sticker">
-    <span data-lang="pl">✦ Rok szkolny 2025/26 ✦</span>
-    <span data-lang="en">✦ School Year 2025/26 ✦</span>
-  </div>
-  <h1>
-    <span data-lang="pl">miaek<br><span>.pl</span></span>
-    <span data-lang="en">miaek<br><span>.pl</span></span>
-  </h1>
-  <p class="hero-sub">
-    <span data-lang="pl">Sprawdziany, chat, eventy i więcej — wszystko na miaek.pl</span>
-    <span data-lang="en">Tests, chat, events and more — all on miaek.pl</span>
-  </p>
-  <a href="#menu" class="scroll-arrow" aria-label="Scroll down">
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-      <polyline points="8,14 20,26 32,14" stroke="#FFE500" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <svg class="halftone" style="top:-10px;left:-10px;width:200px;height:200px;" viewBox="0 0 200 200">
+    <defs><pattern id="ht1" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+      <circle cx="7" cy="7" r="3" fill="#FFE500"/></pattern></defs>
+    <rect width="200" height="200" fill="url(#ht1)"/>
+  </svg>
+  <svg class="halftone" style="bottom:-10px;right:-10px;width:200px;height:200px;" viewBox="0 0 200 200">
+    <defs><pattern id="ht2" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+      <circle cx="7" cy="7" r="3" fill="#C800FF"/></pattern></defs>
+    <rect width="200" height="200" fill="url(#ht2)"/>
+  </svg>
+  <div class="hero-graffiti-bg">miaek</div>
+  <div class="sticker">🕷 strona prywatna</div>
+  <h1 class="hero-title">miaek.pl</h1>
+  <p class="hero-sub">Moja galeria — sprawdziany, notatki i inne rzeczy. Część materiałów wymaga hasła.</p>
+  <p class="hero-tag">#miaek #galeria #2026</p>
+  <button class="scroll-arrow" onclick="document.getElementById('gallery').scrollIntoView({behavior:'smooth'})">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+      <polyline points="6,12 18,24 30,12" stroke="#FFE500" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-  </a>
+  </button>
 </section>
 
-<div class="divider"></div>
+<div class="stripe-divider"></div>
 
-<!-- MENU GŁÓWNE -->
-<section id="menu">
-  <!-- halftone decoration -->
-  <svg class="halftone" style="top:-20px;right:-20px;width:180px;height:180px;" viewBox="0 0 180 180">
-    <pattern id="ht1" x="0" y="0" width="18" height="18" patternUnits="userSpaceOnUse">
-      <circle cx="9" cy="9" r="4" fill="#FFE500"/>
-    </pattern>
-    <rect width="180" height="180" fill="url(#ht1)"/>
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="oblique-bg"></div>
+  <svg class="halftone" style="top:0;right:0;width:160px;height:160px;" viewBox="0 0 160 160">
+    <defs><pattern id="ht3" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
+      <circle cx="6" cy="6" r="2.5" fill="#6200CC"/></pattern></defs>
+    <rect width="160" height="160" fill="url(#ht3)"/>
   </svg>
-  <h2 class="section-title">
-    <span data-lang="pl">📌 CO CHCESZ ZROBIĆ?</span>
-    <span data-lang="en">📌 WHAT DO YOU NEED?</span>
-  </h2>
-  <p class="section-sub">
-    <span data-lang="pl">Wybierz sekcję i działaj</span>
-    <span data-lang="en">Choose a section and go</span>
-  </p>
-  <div class="btn-grid">
-    <button class="school-btn hot" onclick="openSprawdziany()">
-      <div class="btn-tag">HOT</div>
-      <div class="btn-icon">📝</div>
-      <div class="btn-label" data-lang="pl">Sprawdziany<br><small style="font-family:'Special Elite';font-size:0.7rem;font-weight:400">terminy & zakres</small></div>
-      <div class="btn-label" data-lang="en">Tests<br><small style="font-family:'Special Elite';font-size:0.7rem;font-weight:400">dates & scope</small></div>
-    </button>
-    <a href="#spoted" class="school-btn purple-btn">
-      <div class="btn-tag">LIVE</div>
-      <div class="btn-icon">💬</div>
-      <div class="btn-label" data-lang="pl">Chat / Spoted<br><small style="font-family:'Special Elite';font-size:0.7rem;font-weight:400">forum szkolne</small></div>
-      <div class="btn-label" data-lang="en">Chat / Spotted<br><small style="font-family:'Special Elite';font-size:0.7rem;font-weight:400">school forum</small></div>
-    </a>
-    <button class="school-btn" onclick="openModal('modal-event')">
-      <div class="btn-icon">🎉</div>
-      <div class="btn-label" data-lang="pl">Eventy & Koła<br><small style="font-family:'Special Elite';font-size:0.7rem;font-weight:400">zajęcia pozalekcyjne</small></div>
-      <div class="btn-label" data-lang="en">Events & Clubs<br><small style="font-family:'Special Elite';font-size:0.7rem;font-weight:400">after-school activities</small></div>
-    </button>
-  </div>
+  <h2 class="section-title">📂 Galeria</h2>
+  <p class="section-sub">Kliknij kafelek, żeby otworzyć. Niektóre wymagają hasła.</p>
+  <div class="tiles-grid" id="tiles-grid"></div>
 </section>
 
-<div class="divider"></div>
-
-<!-- SPRAWDZIANY -->
-<section id="sprawdziany">
-  <svg class="halftone" style="bottom:-20px;left:-20px;width:160px;height:160px;" viewBox="0 0 160 160">
-    <pattern id="ht2" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
-      <circle cx="8" cy="8" r="3.5" fill="#C800FF"/>
-    </pattern>
-    <rect width="160" height="160" fill="url(#ht2)"/>
-  </svg>
-  <h2 class="section-title">
-    <span data-lang="pl">📝 SPRAWDZIANY</span>
-    <span data-lang="en">📝 UPCOMING TESTS</span>
-  </h2>
-  <p class="section-sub">
-    <span data-lang="pl">Najbliższe terminy — bądź przygotowany!</span>
-    <span data-lang="en">Upcoming dates — stay prepared!</span>
-  </p>
-  <div class="test-list">
-    <div class="test-item">
-      <div class="test-date-box">15<span>MAR</span></div>
-      <div class="test-info">
-        <div class="test-subject" data-lang="pl">Matematyka — Funkcje kwadratowe</div>
-        <div class="test-subject" data-lang="en">Mathematics — Quadratic Functions</div>
-        <div class="test-detail" data-lang="pl">Klasy 2A, 2B • sala 204 • zakres: rozdziały 5–7</div>
-        <div class="test-detail" data-lang="en">Classes 2A, 2B • room 204 • chapters 5–7</div>
-      </div>
-      <span class="test-badge red" data-lang="pl">ZA 3 DNI</span>
-      <span class="test-badge red" data-lang="en">IN 3 DAYS</span>
-    </div>
-    <div class="test-item">
-      <div class="test-date-box">18<span>MAR</span></div>
-      <div class="test-info">
-        <div class="test-subject" data-lang="pl">Biologia — Genetyka</div>
-        <div class="test-subject" data-lang="en">Biology — Genetics</div>
-        <div class="test-detail" data-lang="pl">Klasy 3A, 3C • sala 115 • zakres: DNA, transkrypcja</div>
-        <div class="test-detail" data-lang="en">Classes 3A, 3C • room 115 • DNA, transcription</div>
-      </div>
-      <span class="test-badge blue" data-lang="pl">ZA TYDZIEŃ</span>
-      <span class="test-badge blue" data-lang="en">NEXT WEEK</span>
-    </div>
-    <div class="test-item">
-      <div class="test-date-box">21<span>MAR</span></div>
-      <div class="test-info">
-        <div class="test-subject" data-lang="pl">Historia — II Wojna Światowa</div>
-        <div class="test-subject" data-lang="en">History — World War II</div>
-        <div class="test-detail" data-lang="pl">Wszystkie klasy 2 • sala 301</div>
-        <div class="test-detail" data-lang="en">All class 2 groups • room 301</div>
-      </div>
-      <span class="test-badge green" data-lang="pl">DUŻO CZASU</span>
-      <span class="test-badge green" data-lang="en">PLENTY OF TIME</span>
-    </div>
-    <div class="test-item">
-      <div class="test-date-box">25<span>MAR</span></div>
-      <div class="test-info">
-        <div class="test-subject" data-lang="pl">Język Angielski — Gramatyka</div>
-        <div class="test-subject" data-lang="en">English — Grammar Test</div>
-        <div class="test-detail" data-lang="pl">Klasy 1A–1D • Present Perfect, Past Simple</div>
-        <div class="test-detail" data-lang="en">Classes 1A–1D • Present Perfect, Past Simple</div>
-      </div>
-      <span class="test-badge green" data-lang="pl">DUŻO CZASU</span>
-      <span class="test-badge green" data-lang="en">PLENTY OF TIME</span>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- SPOTED / CHAT -->
-<section id="spoted">
-  <svg class="halftone" style="top:-10px;right:-10px;width:140px;height:140px;" viewBox="0 0 140 140">
-    <pattern id="ht3" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
-      <circle cx="7" cy="7" r="3" fill="#FFE500"/>
-    </pattern>
-    <rect width="140" height="140" fill="url(#ht3)"/>
-  </svg>
-  <h2 class="section-title">
-    <span data-lang="pl">💬 SPOTED / FORUM</span>
-    <span data-lang="en">💬 SPOTTED / FORUM</span>
-  </h2>
-  <p class="section-sub">
-    <span data-lang="pl">Anonimowy chat szkolny — napisz cokolwiek!</span>
-    <span data-lang="en">Anonymous school chat — say anything!</span>
-  </p>
-  <div class="spoted-input-wrap">
-    <input class="spoted-input" id="spoted-input" placeholder="Napisz coś... / Write something..." maxlength="200">
-    <button class="spoted-send" onclick="sendSpoted()">
-      <span data-lang="pl">WYŚLIJ</span>
-      <span data-lang="en">SEND</span>
-    </button>
-  </div>
-  <div class="spoted-wall" id="spoted-wall">
-    <div class="spoted-msg"><div class="spoted-nick">Anonim_7743</div><span data-lang="pl">Ktoś widział żółty sweter w szatni? To mój 😭</span><span data-lang="en">Anyone seen a yellow sweater in the locker room? It's mine 😭</span></div>
-    <div class="spoted-msg"><div class="spoted-nick">Anonim_1102</div><span data-lang="pl">Stołówka dziś miała NAJLEPSZĄ pizzę ever. 10/10</span><span data-lang="en">The canteen pizza today was LEGENDARY. 10/10</span></div>
-    <div class="spoted-msg"><div class="spoted-nick">Anonim_8841</div><span data-lang="pl">Czy ktoś ma notatki z historii z wtorku?? Byłem chory</span><span data-lang="en">Does anyone have history notes from Tuesday?? I was sick</span></div>
-    <div class="spoted-msg"><div class="spoted-nick">Anonim_3310</div><span data-lang="pl">Sprawdzian z matmy będzie bardzo trudny, p. Nowak mówił że zakres jest DUŻY</span><span data-lang="en">The math test is going to be super hard, Mr Nowak said the scope is HUGE</span></div>
-  </div>
-</section>
+<div class="stripe-divider"></div>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">miaek<span style="color:var(--purple)">.pl</span></div>
-  <p data-lang="pl">Nieoficjalny portal szkolny • Zrobiony z ❤️ przez uczniów<br>© 2025/2026 — Wszelkie prawa zastrzeżone</p>
-  <p data-lang="en">Unofficial school portal • Made with ❤️ by students<br>© 2025/2026 — All rights reserved</p>
+  <div class="footer-logo">miaek.pl</div>
+  <p class="footer-copy">© 2026 miaek.pl — wszystkie prawa zastrzeżone</p>
 </footer>
 
-<!-- MODAL: Event -->
-<div class="modal-overlay" id="modal-event" onclick="closeModalOuter(event,'modal-event')">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('modal-event')">✕</button>
-    <div class="modal-title" data-lang="pl">🎉 EVENTY & KOŁA</div>
-    <div class="modal-title" data-lang="en">🎉 EVENTS & CLUBS</div>
-    <p data-lang="pl">Najbliższe wydarzenia i koła zainteresowań:</p>
-    <p data-lang="en">Upcoming events and school clubs:</p>
-    <div style="margin-bottom:10px">
-      <div class="schedule-row" style="margin-bottom:8px"><span class="schedule-time">14.03</span><span class="schedule-subject" data-lang="pl">Turniej Piłkarski — Zapis u p. Kowalskiego</span><span class="schedule-subject" data-lang="en">Football Tournament — Sign up at Mr Kowalski's</span></div>
-      <div class="schedule-row" style="margin-bottom:8px"><span class="schedule-time">20.03</span><span class="schedule-subject" data-lang="pl">Konkurs Plastyczny — Aula, godz. 15:00</span><span class="schedule-subject" data-lang="en">Art Contest — Hall, 3:00 PM</span></div>
-      <div class="schedule-row" style="margin-bottom:8px"><span class="schedule-time">ŚR 16:00</span><span class="schedule-subject" data-lang="pl">Koło Informatyczne — sala LAB</span><span class="schedule-subject" data-lang="en">IT Club — LAB room</span></div>
-      <div class="schedule-row"><span class="schedule-time">PT 14:30</span><span class="schedule-subject" data-lang="pl">Koło Teatralne — aula</span><span class="schedule-subject" data-lang="en">Drama Club — hall</span></div>
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+  <div class="modal-box" id="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+
+    <div id="modal-password-screen">
+      <div class="modal-title" id="modal-title"></div>
+      <p class="modal-hint">Wpisz hasło, żeby odblokować tę sekcję.</p>
+      <input class="modal-input" id="modal-input" type="password"
+        placeholder="••••••••"
+        onkeydown="if(event.key==='Enter')tryPassword()"/>
+      <button class="modal-btn" onclick="tryPassword()">ODBLOKUJ</button>
+      <p class="modal-error" id="modal-error">❌ Złe hasło! Spróbuj jeszcze raz.</p>
     </div>
-    <button class="btn-submit" onclick="closeModal('modal-event')">
-      <span data-lang="pl">ZAMKNIJ ✕</span>
-      <span data-lang="en">CLOSE ✕</span>
-    </button>
+
+    <div class="content-area" id="modal-content">
+      <div class="modal-title" id="modal-content-title"></div>
+      <div class="photos-grid" id="modal-photos"></div>
+    </div>
   </div>
 </div>
 
-<!-- MODAL: Sprawdziany password -->
-<div class="modal-overlay" id="modal-pass" onclick="closeModalOuter(event,'modal-pass')">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('modal-pass')">✕</button>
-    <div class="modal-title">🔐 HASŁO</div>
-    <p data-lang="pl">Wpisz hasło aby zobaczyć sprawdziany.</p>
-    <p data-lang="en">Enter the password to view tests.</p>
-    <input type="password" id="pass-input" placeholder="Hasło / Password" onkeydown="if(event.key==='Enter')checkPass()">
-    <div id="pass-error" style="color:var(--red);font-family:'Bangers',cursive;font-size:1rem;margin-bottom:10px;display:none">
-      <span data-lang="pl">❌ ZŁE HASŁO!</span>
-      <span data-lang="en">❌ WRONG PASSWORD!</span>
-    </div>
-    <button class="btn-submit" onclick="checkPass()">
-      <span data-lang="pl">WEJDŹ ✦</span>
-      <span data-lang="en">ENTER ✦</span>
-    </button>
-  </div>
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+  <span class="lightbox-caption" id="lightbox-caption"></span>
 </div>
-
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
 
 <script>
-// === LANG ===
-function setLang(l) {
-  document.documentElement.lang = l;
-  document.body.className = l;
-  document.getElementById('btn-pl').classList.toggle('active', l === 'pl');
-  document.getElementById('btn-en').classList.toggle('active', l === 'en');
-}
+let currentTile = null;
 
-// === TOAST ===
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2600);
-}
+// ── Buduj kafelki z konfiguracji FOLDERY ──
+function buildTiles() {
+  const grid = document.getElementById('tiles-grid');
+  grid.innerHTML = '';
 
-// === MODAL ===
-function openModal(id) {
-  document.getElementById(id).classList.add('open');
-}
-
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-
-function closeModalOuter(e, id) {
-  if (e.target === document.getElementById(id)) closeModal(id);
-}
-
-// === SPOTED ===
-let spotedNames = ['Anonim_' + Math.floor(1000+Math.random()*9000)];
-
-function sendSpoted() {
-  const inp = document.getElementById('spoted-input');
-  const val = inp.value.trim();
-  if (!val) return;
-  const wall = document.getElementById('spoted-wall');
-  const msg = document.createElement('div');
-  msg.className = 'spoted-msg';
-  const nick = 'Anonim_' + Math.floor(1000 + Math.random() * 9000);
-  msg.innerHTML = `<div class="spoted-nick">${nick} <span style="color:var(--yellow);font-size:0.7rem">(Ty / You)</span></div>${escHtml(val)}`;
-  wall.prepend(msg);
-  inp.value = '';
-  showToast('✦ WYSŁANO!');
-}
-
-document.getElementById('spoted-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') sendSpoted();
-});
-
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// === ANNOUNCEMENT ===
-function submitAnnouncement() {
-  const title = document.getElementById('ann-title').value.trim();
-  const author = document.getElementById('ann-author').value.trim();
-  const body = document.getElementById('ann-body').value.trim();
-  if (!title || !body) { showToast('⚠️ Wypełnij wszystkie pola!'); return; }
-  closeModal('modal-zguby');
-  document.getElementById('ann-title').value = '';
-  document.getElementById('ann-author').value = '';
-  document.getElementById('ann-body').value = '';
-  showToast('✦ OGŁOSZENIE DODANE!');
-
-  // Add to lost-grid
-  const grid = document.querySelector('.lost-grid');
-  const card = document.createElement('div');
-  card.className = 'lost-card';
-  card.style.animation = 'fadeSlide 0.4s ease';
-  card.innerHTML = `
-    <div class="lost-card-head">
-      <span class="lost-badge info">NOWE</span>
-      <div class="lost-card-title">${escHtml(title)}</div>
-    </div>
-    <p>${escHtml(body)}</p>
-    <div class="lost-card-meta">📍 ${escHtml(author || 'Anonim')} • właśnie dodane</div>
-  `;
-  grid.prepend(card);
-}
-
-
-// === SPRAWDZIANY PASSWORD ===
-function openSprawdziany() {
-  document.getElementById('pass-input').value = '';
-  document.getElementById('pass-error').style.display = 'none';
-  openModal('modal-pass');
-  setTimeout(() => document.getElementById('pass-input').focus(), 100);
-}
-
-function checkPass() {
-  const val = document.getElementById('pass-input').value;
-  // Change 'haslo123' to your actual password
-  if (val === 'haslo123') {
-    closeModal('modal-pass');
-    document.getElementById('sprawdziany').scrollIntoView({ behavior: 'smooth' });
-  } else {
-    document.getElementById('pass-error').style.display = 'block';
-    document.getElementById('pass-input').value = '';
-    document.getElementById('pass-input').focus();
-  }
-}
-
-// === SMOOTH SCROLL (fallback for older browsers) ===
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const target = document.querySelector(a.getAttribute('href'));
-    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+  Object.entries(FOLDERY).forEach(([id, cfg]) => {
+    const count = cfg.pliki.length;
+    const tile = document.createElement('div');
+    tile.className = 'tile';
+    tile.onclick = () => openModal(id);
+    tile.innerHTML = `
+      ${cfg.zablokowane ? '<span class="tile-locked-icon">🔒</span>' : ''}
+      <div class="tile-inner">
+        <span class="tile-icon">${cfg.ikona}</span>
+        <span class="tile-name">${cfg.nazwa}</span>
+        <span class="tile-label ${cfg.zablokowane ? '' : 'open'}">${cfg.zablokowane ? 'Zablokowane' : 'Otwarte'}</span>
+        ${count > 0 ? `<span class="tile-count">${count} plik${count === 1 ? '' : count < 5 ? 'i' : 'ów'}</span>` : ''}
+      </div>
+    `;
+    grid.appendChild(tile);
   });
+
+  // kafelek Wkrótce
+  const soon = document.createElement('div');
+  soon.className = 'tile soon';
+  soon.innerHTML = `<div class="tile-inner"><span class="tile-icon">➕</span><span class="tile-name" style="color:var(--white)">Wkrótce</span></div>`;
+  grid.appendChild(soon);
+}
+
+// ── Otwórz modal ──
+function openModal(id) {
+  const cfg = FOLDERY[id];
+  if (!cfg) return;
+  currentTile = id;
+
+  document.getElementById('modal-input').value = '';
+  document.getElementById('modal-error').classList.remove('show');
+  document.getElementById('modal-password-screen').style.display = 'block';
+  document.getElementById('modal-content').classList.remove('visible');
+  document.getElementById('modal-title').textContent = `🔒 ${cfg.nazwa}`;
+
+  if (!cfg.zablokowane) {
+    showContent(id);
+  }
+
+  document.getElementById('modal').classList.add('open');
+  if (cfg.zablokowane) {
+    setTimeout(() => document.getElementById('modal-input').focus(), 80);
+  }
+}
+
+// ── Sprawdź hasło ──
+function tryPassword() {
+  const val = document.getElementById('modal-input').value.trim();
+  const cfg = FOLDERY[currentTile];
+  if (val === cfg.haslo) {
+    document.getElementById('modal-error').classList.remove('show');
+    showContent(currentTile);
+  } else {
+    document.getElementById('modal-error').classList.add('show');
+    document.getElementById('modal-input').value = '';
+    document.getElementById('modal-input').focus();
+    // efekt potrząsania
+    const box = document.getElementById('modal-box');
+    box.style.transition = 'transform 0.08s';
+    box.style.transform = 'translateX(-10px)';
+    setTimeout(() => { box.style.transform = 'translateX(10px)'; }, 80);
+    setTimeout(() => { box.style.transform = 'translateX(0)'; }, 160);
+    setTimeout(() => { box.style.transition = ''; }, 250);
+  }
+}
+
+// ── Pokaż zawartość folderu ──
+function showContent(id) {
+  const cfg = FOLDERY[id];
+  document.getElementById('modal-password-screen').style.display = 'none';
+  document.getElementById('modal-content-title').textContent = `${cfg.ikona} ${cfg.nazwa}`;
+
+  const grid = document.getElementById('modal-photos');
+  grid.innerHTML = '';
+
+  const obrazy = cfg.pliki.filter(p => /\.(jpe?g|png|gif|webp)$/i.test(p));
+  const plikiInne = cfg.pliki.filter(p => !/\.(jpe?g|png|gif|webp)$/i.test(p));
+
+  if (cfg.pliki.length === 0) {
+    grid.innerHTML = `<p class="empty-msg">📭 Brak plików w tym folderze.<br>
+      <small style="opacity:.6">Dodaj ścieżki w sekcji FOLDERY na górze pliku HTML.</small></p>`;
+  }
+
+  obrazy.forEach(sciezka => {
+    const nazwa = sciezka.split('/').pop();
+    const card = document.createElement('div');
+    card.className = 'photo-card';
+    card.onclick = () => openLightbox(sciezka, nazwa);
+    card.innerHTML = `
+      <img src="${sciezka}" alt="${nazwa}" onerror="this.closest('.photo-card').style.display='none'">
+      <span class="photo-name">${nazwa}</span>
+    `;
+    grid.appendChild(card);
+  });
+
+  plikiInne.forEach(sciezka => {
+    const nazwa = sciezka.split('/').pop();
+    const a = document.createElement('a');
+    a.className = 'file-link';
+    a.href = sciezka;
+    a.target = '_blank';
+    a.innerHTML = `<span>📄</span><span>${nazwa}</span>`;
+    grid.appendChild(a);
+  });
+
+  document.getElementById('modal-content').classList.add('visible');
+}
+
+// ── Lightbox ──
+function openLightbox(src, caption) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox-caption').textContent = caption;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+// ── Zamknij modal ──
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  currentTile = null;
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal')) closeModal();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeLightbox(); closeModal(); }
 });
 
-// === KEYBOARD ESC closes modals ===
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
-  }
-});
+buildTiles();
 </script>
 </body>
 </html>

@@ -341,62 +341,15 @@ footer {
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════════
-  ⚙️  KONFIGURACJA FOLDERÓW
-  Dodaj ścieżki do swoich plików w tablicy "pliki".
-  Przykłady:
-    'sprawdziany/matematyka_01.jpg'
-    'sprawdziany/polski_02.png'
-  Obsługiwane typy obrazów: jpg, jpeg, png, gif, webp
-  Inne pliki (np. pdf) pojawią się jako linki do pobrania.
-═══════════════════════════════════════════════════════════ -->
+<!-- ⚙️ KONFIGURACJA — tylko hasła. Pliki wykrywane automatycznie z pliki.json -->
 <script>
-const FOLDERY = {
-
-  sprawdziany: {
-    haslo: 'miaek2026',
-    ikona: '📝',
-    nazwa: 'Sprawdziany',
-    zablokowane: true,
-    pliki: [
-      // 'sprawdziany/matematyka_01.jpg',
-      // 'sprawdziany/polski_01.jpg',
-      // 'sprawdziany/angielski_01.jpg',
-    ]
-  },
-
-  notatki: {
-    haslo: 'notatki2026',
-    ikona: '📓',
-    nazwa: 'Notatki',
-    zablokowane: true,
-    pliki: [
-      // 'notatki/chemia_01.jpg',
-      // 'notatki/fizyka_01.jpg',
-    ]
-  },
-
-  zdjecia: {
-    haslo: null,
-    ikona: '🖼️',
-    nazwa: 'Zdjęcia',
-    zablokowane: false,
-    pliki: [
-      // 'zdjecia/foto_01.jpg',
-    ]
-  },
-
-  inne: {
-    haslo: 'tajne2026',
-    ikona: '📦',
-    nazwa: 'Inne',
-    zablokowane: true,
-    pliki: [
-      // 'inne/plik_01.jpg',
-    ]
-  }
-
+const KONFIGURACJA = {
+  sprawdziany: { haslo: 'miaek2026',   ikona: '📝', nazwa: 'Sprawdziany', zablokowane: true  },
+  notatki:     { haslo: 'notatki2026', ikona: '📓', nazwa: 'Notatki',     zablokowane: true  },
+  zdjecia:     { haslo: null,          ikona: '🖼️', nazwa: 'Zdjęcia',     zablokowane: false },
+  inne:        { haslo: 'tajne2026',   ikona: '📦', nazwa: 'Inne',        zablokowane: true  }
 };
+let FOLDERY = {};
 </script>
 
 <!-- NAV -->
@@ -497,7 +450,24 @@ const FOLDERY = {
 <script>
 let currentTile = null;
 
-// ── Buduj kafelki z konfiguracji FOLDERY ──
+// ── Załaduj pliki.json i zbuduj FOLDERY ──
+async function init() {
+  try {
+    const res = await fetch('pliki.json?t=' + Date.now());
+    const dane = await res.json();
+    Object.entries(KONFIGURACJA).forEach(([id, cfg]) => {
+      FOLDERY[id] = { ...cfg, pliki: dane[id] || [] };
+    });
+  } catch(e) {
+    // fallback gdy brak pliki.json (np. lokalnie)
+    Object.entries(KONFIGURACJA).forEach(([id, cfg]) => {
+      FOLDERY[id] = { ...cfg, pliki: [] };
+    });
+  }
+  buildTiles();
+}
+
+// ── Buduj kafelki ──
 function buildTiles() {
   const grid = document.getElementById('tiles-grid');
   grid.innerHTML = '';
@@ -519,7 +489,6 @@ function buildTiles() {
     grid.appendChild(tile);
   });
 
-  // kafelek Wkrótce
   const soon = document.createElement('div');
   soon.className = 'tile soon';
   soon.innerHTML = `<div class="tile-inner"><span class="tile-icon">➕</span><span class="tile-name" style="color:var(--white)">Wkrótce</span></div>`;
@@ -538,14 +507,10 @@ function openModal(id) {
   document.getElementById('modal-content').classList.remove('visible');
   document.getElementById('modal-title').textContent = `🔒 ${cfg.nazwa}`;
 
-  if (!cfg.zablokowane) {
-    showContent(id);
-  }
+  if (!cfg.zablokowane) showContent(id);
 
   document.getElementById('modal').classList.add('open');
-  if (cfg.zablokowane) {
-    setTimeout(() => document.getElementById('modal-input').focus(), 80);
-  }
+  if (cfg.zablokowane) setTimeout(() => document.getElementById('modal-input').focus(), 80);
 }
 
 // ── Sprawdź hasło ──
@@ -559,7 +524,6 @@ function tryPassword() {
     document.getElementById('modal-error').classList.add('show');
     document.getElementById('modal-input').value = '';
     document.getElementById('modal-input').focus();
-    // efekt potrząsania
     const box = document.getElementById('modal-box');
     box.style.transition = 'transform 0.08s';
     box.style.transform = 'translateX(-10px)';
@@ -569,7 +533,7 @@ function tryPassword() {
   }
 }
 
-// ── Pokaż zawartość folderu ──
+// ── Pokaż zawartość ──
 function showContent(id) {
   const cfg = FOLDERY[id];
   document.getElementById('modal-password-screen').style.display = 'none';
@@ -578,13 +542,15 @@ function showContent(id) {
   const grid = document.getElementById('modal-photos');
   grid.innerHTML = '';
 
-  const obrazy = cfg.pliki.filter(p => /\.(jpe?g|png|gif|webp)$/i.test(p));
-  const plikiInne = cfg.pliki.filter(p => !/\.(jpe?g|png|gif|webp)$/i.test(p));
-
   if (cfg.pliki.length === 0) {
     grid.innerHTML = `<p class="empty-msg">📭 Brak plików w tym folderze.<br>
-      <small style="opacity:.6">Dodaj ścieżki w sekcji FOLDERY na górze pliku HTML.</small></p>`;
+      <small style="opacity:.6">Wrzuć pliki do folderu <strong>${id}/</strong> i zrób push na GitHub.</small></p>`;
+    document.getElementById('modal-content').classList.add('visible');
+    return;
   }
+
+  const obrazy = cfg.pliki.filter(p => /\.(jpe?g|png|gif|webp)$/i.test(p));
+  const plikiInne = cfg.pliki.filter(p => !/\.(jpe?g|png|gif|webp)$/i.test(p));
 
   obrazy.forEach(sciezka => {
     const nazwa = sciezka.split('/').pop();
@@ -600,11 +566,12 @@ function showContent(id) {
 
   plikiInne.forEach(sciezka => {
     const nazwa = sciezka.split('/').pop();
+    const ext = nazwa.split('.').pop().toUpperCase();
     const a = document.createElement('a');
     a.className = 'file-link';
     a.href = sciezka;
-    a.target = '_blank';
-    a.innerHTML = `<span>📄</span><span>${nazwa}</span>`;
+    a.download = nazwa;
+    a.innerHTML = `<span>📄</span><span>${nazwa}</span><span style="margin-left:auto;font-family:'Oswald',sans-serif;font-size:.65rem;background:var(--purple);padding:2px 6px;border:1px solid var(--black)">${ext}</span>`;
     grid.appendChild(a);
   });
 
@@ -617,9 +584,7 @@ function openLightbox(src, caption) {
   document.getElementById('lightbox-caption').textContent = caption;
   document.getElementById('lightbox').classList.add('open');
 }
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('open');
-}
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
 
 // ── Zamknij modal ──
 function closeModal() {
@@ -634,7 +599,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeLightbox(); closeModal(); }
 });
 
-buildTiles();
+init();
 </script>
 </body>
 </html>

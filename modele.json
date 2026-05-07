@@ -1,14 +1,14 @@
 [
   {
-    "nazwa": "Diamentowy Miecz",
-    "typ": "Broń · Java 1.20+",
+    "nazwa": "Stragan",
+    "typ": "Dekoracja",
     "gif": "gif1.gif",
-    "kolor": "pink"
+    "kolor": "red"
   },
   {
-    "nazwa": "Netherite Set",
-    "typ": "Zbroja · Komplet 4 szt.",
+    "nazwa": "Stos Pieniędzy",
+    "typ": "Dekoracja",
     "gif": "gif2.gif",
-    "kolor": "cyan"
+    "kolor": "green"
   }
 ]

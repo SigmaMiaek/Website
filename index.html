@@ -164,6 +164,11 @@ nav {
 .thumb-bg-yellow{background:linear-gradient(135deg,#141000 0%,#221c00 100%)}
 .thumb-bg-green{background:linear-gradient(135deg,#031004 0%,#071a08 100%)}
 .thumb-bg-purple{background:linear-gradient(135deg,#0f071a 0%,#1a0a2d 100%)}
+.thumb-bg-red{background:linear-gradient(135deg,#1a0505 0%,#2d0a0a 100%)}
+.thumb-bg-orange{background:linear-gradient(135deg,#1a0d00 0%,#2d1800 100%)}
+.thumb-bg-blue{background:linear-gradient(135deg,#030a1a 0%,#061530 100%)}
+.thumb-bg-white{background:linear-gradient(135deg,#141414 0%,#1e1e1e 100%)}
+.thumb-bg-gold{background:linear-gradient(135deg,#1a1300 0%,#2d2000 100%)}
 
 /* MODEL GIF */
 .model-gif {
@@ -187,6 +192,11 @@ nav {
 .glow-yellow{background:radial-gradient(circle,rgba(255,230,0,.15) 0%,transparent 70%)}
 .glow-green{background:radial-gradient(circle,rgba(57,255,20,.12) 0%,transparent 70%)}
 .glow-purple{background:radial-gradient(circle,rgba(191,95,255,.15) 0%,transparent 70%)}
+.glow-red{background:radial-gradient(circle,rgba(255,50,50,.18) 0%,transparent 70%)}
+.glow-orange{background:radial-gradient(circle,rgba(255,140,0,.18) 0%,transparent 70%)}
+.glow-blue{background:radial-gradient(circle,rgba(50,100,255,.18) 0%,transparent 70%)}
+.glow-white{background:radial-gradient(circle,rgba(255,255,255,.1) 0%,transparent 70%)}
+.glow-gold{background:radial-gradient(circle,rgba(255,200,0,.18) 0%,transparent 70%)}
 
 .model-tag { position:absolute; top:.6rem; left:.6rem; font-size:.6rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:.25rem .6rem; border-radius:100px; }
 .tag-new{background:rgba(57,255,20,.15);color:var(--neon-green);border:1px solid rgba(57,255,20,.3)}
@@ -416,7 +426,7 @@ footer { padding:2.5rem 2rem; display:flex; align-items:center; justify-content:
 
 <script>
 // Kolory dostępne dla kart (po kolei dla kolejnych modeli)
-const COLORS = ['pink', 'cyan', 'yellow', 'green', 'purple'];
+const COLORS = ['pink', 'cyan', 'yellow', 'green', 'purple', 'red', 'orange', 'blue', 'white', 'gold'];
 
 const glowMap = {
   pink:   'glow-pink',
@@ -424,13 +434,18 @@ const glowMap = {
   yellow: 'glow-yellow',
   green:  'glow-green',
   purple: 'glow-purple',
+  red:    'glow-red',
+  orange: 'glow-orange',
+  blue:   'glow-blue',
+  white:  'glow-white',
+  gold:   'glow-gold',
 };
 
 async function loadModels() {
   const grid = document.getElementById('models-grid');
 
   try {
-    const res = await fetch('modele.json');
+    const res = await fetch('modele.json?v=' + Date.now());
     if (!res.ok) throw new Error('brak pliku');
     const modele = await res.json();
 
